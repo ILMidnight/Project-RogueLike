@@ -14,6 +14,7 @@ public class PlayerManager : MonoBehaviour
     [Header("Movement Settings")]
     public float walkingSpeed = 5.0f;
     public float runningSpeed = 10.0f;
+    public float airMoveSpeed = 3.5f;
     public float jumpHeight = 2.0f;
     public float gravity = -9.81f * 2; // 더 빠르게 떨어지도록 중력값 조정
 
@@ -25,6 +26,9 @@ public class PlayerManager : MonoBehaviour
     private Vector3 moveDirection = Vector3.zero;
     private float rotationX = 0;
     private float currentSpeed;
+
+    public bool nowGrounded = false;
+    bool dontCheckGrounded = false;
     #endregion
 
     private void Awake() {
@@ -37,9 +41,25 @@ public class PlayerManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        foreach(var state in states)
+        if(!dontCheckGrounded)
+            nowGrounded = Physics.Raycast(transform.position, Vector3.down, 1.1f);
+
+        foreach (var state in states)
         {
             state.Value.Tick();
         }
+    }
+
+    public void DelayGround(float time)
+    {
+        nowGrounded = false;
+        dontCheckGrounded = true;
+        Invoke("InvokeDelay", time);
+    }
+    
+    void InvokeDelay()
+    {
+        // nowGrounded = true;
+        dontCheckGrounded = false;
     }
 }
