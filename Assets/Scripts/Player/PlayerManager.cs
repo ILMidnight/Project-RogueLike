@@ -10,7 +10,7 @@ public class PlayerManager : MonoBehaviour
     public Vector3 test;
     
 
-    #region Player Movement Values
+    #region Movement Values
     [Header("Movement Settings")]
     public float walkingSpeed = 5.0f;
     public float runningSpeed = 10.0f;
@@ -21,14 +21,13 @@ public class PlayerManager : MonoBehaviour
     [Header("Camera Look Settings")]
     public float lookSpeed = 2.0f;
     public float lookXLimit = 45.0f;
-
-    private CharacterController characterController;
-    private Vector3 moveDirection = Vector3.zero;
-    private float rotationX = 0;
-    private float currentSpeed;
-
     public bool nowGrounded = false;
     bool dontCheckGrounded = false;
+    #endregion
+
+    #region Attack Values
+    public LayerMask skipMask;
+    public Transform attackPoolTrans;
     #endregion
 
     private void Awake() {
@@ -36,6 +35,7 @@ public class PlayerManager : MonoBehaviour
 
         states.Add("InputController", new InputController(this));
         states.Add("MoveController", new MovementController(this));
+        states.Add("AttackController", new AttackController(this));
     }
 
     // Update is called once per frame

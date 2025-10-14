@@ -11,8 +11,14 @@ public class InputController : PlayerControllerBase
     private bool _inputJump;
     public bool inputJump => _inputJump;
 
+    private bool _inputClick;
+    public bool inputClick => _inputClick;
+
     public InputController(PlayerManager pMng) : base(pMng)
     {
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
+
         _inputDirection = new Vector2();
     }
 
@@ -21,7 +27,13 @@ public class InputController : PlayerControllerBase
         _inputDirection = new Vector3(Input.GetAxisRaw("Vertical"), 0, Input.GetAxisRaw("Horizontal")).normalized;
         _inputMouseDirection = Input.mousePositionDelta;
         _inputJump = Input.GetKey(KeyCode.Space);
-        
-        // pMng.test = _inputMouseDirection;
+
+        if (Input.GetMouseButtonDown(0))
+            _inputClick = true;
+    }
+
+    public void CheckClick()
+    {
+        _inputClick = false;
     }
 }

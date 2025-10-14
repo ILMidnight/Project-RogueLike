@@ -1,6 +1,6 @@
 public class PlayerControllerBase : IPlayerState
 {
-    protected PlayerManager pMng;
+    public PlayerManager pMng;
 
     public PlayerControllerBase(PlayerManager pMng)
     {
