@@ -9,6 +9,9 @@ public class HitScanAttack : AttackBase
 
     Transform bulletObject;
 
+    int totalBullet;
+    int currentBullet;
+
     public HitScanAttack(AttackController aController) : base(aController)
     {
         bulletObject = GameObject.Instantiate(
@@ -26,6 +29,13 @@ public class HitScanAttack : AttackBase
         if(Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hit, Mathf.Infinity, ~skipMask))
         {
             bulletObject.position = hit.point;
+            var temp = hit.transform.GetComponent<BaseMonster>();
+            
+            if (temp != null)
+            {
+                // Debug.Log(temp);
+                temp.Hit(10);
+            }
         }
         else
         {

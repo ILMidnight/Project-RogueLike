@@ -63,6 +63,7 @@ public class MovementController : PlayerControllerBase
         }
 
         currentSpeed.y += pMng.gravity * Time.deltaTime;
+        currentSpeed.y = Mathf.Clamp(currentSpeed.y, -20, 20);
         moveDirection = currentSpeed;
 
         cController.Move(moveDirection * Time.deltaTime);

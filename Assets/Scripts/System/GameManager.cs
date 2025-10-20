@@ -34,16 +34,5 @@ public class GameManager : MonoBehaviour
         audioListenerController = new AudioListenerController(
             transform.GetChild(0).gameObject
         );
-        
-        // CSV Data Loading
-        // foreach (var data in loader.LoadExpCSV("expData.csv"))
-        // {
-        //     Debug.Log(data);
-        // }
-
-        // Scene Loading
-        // sceneController.loadScene(1);
-
-        
     }
 }

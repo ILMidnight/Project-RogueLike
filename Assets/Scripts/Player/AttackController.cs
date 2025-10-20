@@ -24,11 +24,6 @@ public class AttackController : PlayerControllerBase
     {
         base.Tick();
 
-        // foreach(var attack in attacks)
-        // {
-        //     attack.Tick
-        // }
-
         if (inputController.inputClick)
         {
             inputController.CheckClick();

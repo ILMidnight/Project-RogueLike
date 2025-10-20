@@ -1,5 +1,5 @@
+using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class PlayerManager : MonoBehaviour
@@ -8,7 +8,7 @@ public class PlayerManager : MonoBehaviour
 
     [SerializeField]
     public Vector3 test;
-    
+
 
     #region Movement Values
     [Header("Movement Settings")]
@@ -30,18 +30,25 @@ public class PlayerManager : MonoBehaviour
     public Transform attackPoolTrans;
     #endregion
 
-    private void Awake() {
-        states = new Dictionary<string, IPlayerState>();
+    #region UI Methoad
+    public GameObject StatusCanvas;
+    #endregion
 
+    private void Awake()
+    {
+        states = new Dictionary<string, IPlayerState>();
+        
+        states.Add("PlayerUIController", new PlayerUIController(this));
         states.Add("InputController", new InputController(this));
         states.Add("MoveController", new MovementController(this));
         states.Add("AttackController", new AttackController(this));
+        states.Add("StatusController", new PlayerStatusController(this));
     }
 
     // Update is called once per frame
     void Update()
     {
-        if(!dontCheckGrounded)
+        if (!dontCheckGrounded)
             nowGrounded = Physics.Raycast(transform.position, Vector3.down, 1.1f);
 
         foreach (var state in states)
@@ -56,10 +63,40 @@ public class PlayerManager : MonoBehaviour
         dontCheckGrounded = true;
         Invoke("InvokeDelay", time);
     }
-    
+
     void InvokeDelay()
     {
         // nowGrounded = true;
         dontCheckGrounded = false;
+    }
+
+    Coroutine invulnerabilityRoot;
+    float invulnerabilityTime = .5f;
+
+    bool nowInvulnerability = false;
+
+    public void Hit(int damage)
+    {
+        if (nowInvulnerability)
+        {
+            return;
+        }
+        else
+        {
+            if (invulnerabilityRoot != null)
+                StopCoroutine(invulnerabilityRoot);
+            invulnerabilityRoot = StartCoroutine(InvulnerabilityDelay(invulnerabilityTime));
+        }
+
+        Debug.Log("Hit");
+        
+        (states["StatusController"] as PlayerStatusController).AddDamage(damage);
+    }
+
+    IEnumerator InvulnerabilityDelay(float delayTime)
+    {
+        nowInvulnerability = true;
+        yield return new WaitForSecondsRealtime(delayTime);
+        nowInvulnerability = false;
     }
 }
