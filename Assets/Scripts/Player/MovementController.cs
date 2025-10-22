@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.UIElements;
 
-public class MovementController : PlayerControllerBase
+public class PlayerMovementController : PlayerControllerBase
 {
     CharacterController cController;
 
@@ -14,7 +14,7 @@ public class MovementController : PlayerControllerBase
 
     RaycastHit groundHit;
 
-    public MovementController(PlayerManager pMng) : base(pMng)
+    public PlayerMovementController(PlayerManager pMng) : base(pMng)
     {
         moveDirection = new Vector3();
         currentSpeed = new Vector3();

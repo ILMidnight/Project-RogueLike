@@ -38,9 +38,9 @@ public class PlayerManager : MonoBehaviour
     {
         states = new Dictionary<string, IPlayerState>();
         
-        states.Add("PlayerUIController", new PlayerUIController(this));
+        states.Add("UIController", new PlayerUIController(this));
         states.Add("InputController", new InputController(this));
-        states.Add("MoveController", new MovementController(this));
+        states.Add("MoveController", new PlayerMovementController(this));
         states.Add("AttackController", new AttackController(this));
         states.Add("StatusController", new PlayerStatusController(this));
     }

@@ -62,9 +62,9 @@ public struct StatPoint
         int lerpCoolDownSpeed = (int)Mathf.Round(start.coolDownSpeed + (end.coolDownSpeed - start.coolDownSpeed) * t);
         int lerpStrength = (int)Mathf.Round(start.strength + (end.strength - start.strength) * t);
 
-        if (Mathf.Abs(end.Hp - lerpHp) < .01f)
+        if (Mathf.Abs(end.Hp - lerpHp) < .1f)
             lerpHp = end.Hp;
-        if (Mathf.Abs(end.shield - lerpShield) < .01f)
+        if (Mathf.Abs(end.shield - lerpShield) < .1f)
             lerpShield = end.shield;
 
         return new StatPoint
@@ -106,6 +106,16 @@ public class ShieldBuff : BaseStatusEffect
     public override void StartEffect()
     {
         base.StartEffect();
+    }
+}
+
+public class BurnDeBuff : BaseStatusEffect
+{
+    float burnDamage;
+
+    public BurnDeBuff(PlayerStatusController pState, int burnDamage) : base(pState)
+    {
+        this.burnDamage = burnDamage;
     }
 }
 

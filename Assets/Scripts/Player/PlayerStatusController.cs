@@ -12,6 +12,7 @@ public class PlayerStatusController : PlayerControllerBase
     #endregion
 
     PlayerUIController pUIController;
+    PlayerMovementController pMovementController;
 
     TMP_Text hpText;
     TMP_Text shieldText;
@@ -20,7 +21,8 @@ public class PlayerStatusController : PlayerControllerBase
     {
         InItPlayer();
 
-        pUIController = pMng.states["PlayerUIController"] as PlayerUIController;
+        pUIController = pMng.states["UIController"] as PlayerUIController;
+        pMovementController = pMng.states["MoveController"] as PlayerMovementController;
     }
 
     void InItPlayer()
