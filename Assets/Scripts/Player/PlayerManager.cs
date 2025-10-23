@@ -50,6 +50,8 @@ public class PlayerManager : MonoBehaviour
     #region Setting Player Functions 
     private void Awake()
     {
+        SetCursor(false);
+
         loader = new DataLoader();
         nextLevelExpArr = loader.LoadExpCSV("expData.csv");
 
@@ -62,6 +64,21 @@ public class PlayerManager : MonoBehaviour
         states.Add("StatusController", new PlayerStatusController(this));
 
         Invoke("InvokeInitControllers", .5f);
+    }
+
+    public void SetCursor(bool canControl)
+    {
+        if (canControl)
+        {
+            Cursor.lockState = CursorLockMode.Confined;
+            Cursor.visible = true;
+        }
+        else
+        {
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
+        }
+        
     }
 
     void InvokeInitControllers()

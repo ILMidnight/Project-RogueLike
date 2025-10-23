@@ -23,9 +23,6 @@ public class InputController : PlayerControllerBase
     {
         base.InitController();
 
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
-
         _inputDirection = new Vector2();
     }
 
