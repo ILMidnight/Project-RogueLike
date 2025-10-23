@@ -10,8 +10,6 @@ public class GameManager : MonoBehaviour
             return _instance;
         }
     }
-
-    DataLoader loader;
     SceneController sceneController;
 
     public AudioListenerController audioListenerController;
@@ -29,7 +27,6 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
-        loader = new DataLoader();
         sceneController = new SceneController();
         audioListenerController = new AudioListenerController(
             transform.GetChild(0).gameObject

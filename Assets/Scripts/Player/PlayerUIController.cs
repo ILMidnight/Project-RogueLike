@@ -8,18 +8,24 @@ public class PlayerUIController : PlayerControllerBase
 
     public PlayerUIController(PlayerManager pMng) : base(pMng)
     {
-        InitUI();
+        
     }
-    
-    void InitUI()
+
+    public override void InitController()
     {
+        base.InitController();
+
         _statUI = GameObject.Instantiate(
             Resources.Load<GameObject>(Path.Combine("UI", "StatusPanel")),
             pMng.StatusCanvas.transform
         );
-
-        var temp = _statUI.GetComponent<RectTransform>();
-        temp.offsetMin = Vector2.zero;
-        temp.offsetMax = Vector2.zero;
+        ResetPos(_statUI.GetComponent<RectTransform>());
     }
+
+    private void ResetPos(RectTransform rect)
+    {
+        rect.offsetMin = Vector2.zero;
+        rect.offsetMax = Vector2.zero;
+    }
+
 }

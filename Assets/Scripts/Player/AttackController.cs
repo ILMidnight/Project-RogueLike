@@ -12,6 +12,13 @@ public class AttackController : PlayerControllerBase
 
     public AttackController(PlayerManager pMng) : base(pMng)
     {
+
+    }
+
+    public override void InitController()
+    {
+        base.InitController();
+
         inputController = pMng.states["InputController"] as InputController;
 
         attackParent = pMng.transform.GetChild(0);

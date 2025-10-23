@@ -16,6 +16,13 @@ public class InputController : PlayerControllerBase
 
     public InputController(PlayerManager pMng) : base(pMng)
     {
+
+    }
+
+    public override void InitController()
+    {
+        base.InitController();
+
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
 

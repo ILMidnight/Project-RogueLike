@@ -2,10 +2,15 @@ using UnityEngine;
 
 public class BaseMonster : MonoBehaviour, IMonster, IEntity
 {
+    protected MonsterManager mMng;
+
     protected int currentHp = 100;
 
-    public virtual void Inintialize()
+    protected int deathExp = 100;
+
+    public virtual void Inintialize(MonsterManager mMng)
     {
+        this.mMng = mMng;
         SetUp();
     }
 
@@ -25,7 +30,6 @@ public class BaseMonster : MonoBehaviour, IMonster, IEntity
     public virtual void Hit(int damage)
     {
         currentHp = Mathf.Max(currentHp - damage, 0);
-        Debug.Log(currentHp);
         if(currentHp <= 0)
         {
             Death();
@@ -35,6 +39,7 @@ public class BaseMonster : MonoBehaviour, IMonster, IEntity
     public virtual void Death()
     {
         Debug.Log($"Death {name}");
+        mMng.pMng.AddExp(deathExp);
         Destroy(gameObject);
     }
 }

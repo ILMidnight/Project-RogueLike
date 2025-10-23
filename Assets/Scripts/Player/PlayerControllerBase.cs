@@ -7,6 +7,10 @@ public class PlayerControllerBase : IPlayerState
         this.pMng = pMng;
     }
 
+    public virtual void InitController()
+    {
+    }
+
     public virtual void Tick()
     {
         

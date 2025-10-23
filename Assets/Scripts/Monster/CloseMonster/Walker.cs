@@ -8,16 +8,14 @@ public class Walker : BaseMonster
     [SerializeField]
     float speed = .5f;
 
-    public override void Inintialize()
+    public override void Inintialize(MonsterManager mMng)
     {
-        base.Inintialize();
+        base.Inintialize(mMng);
     }
 
     protected override void SetUp()
     {
         base.SetUp();
-        // Debug.Log(currentHp);
-        // currentHp = 
     }
 
     private void OnTriggerStay(Collider other) {
@@ -37,7 +35,6 @@ public class Walker : BaseMonster
             targetPos,
             Time.deltaTime * speed
         );
-
         transform.GetChild(0).LookAt(Camera.main.transform.position);
     }
 }

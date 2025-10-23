@@ -4,6 +4,7 @@ using UnityEngine.UIElements;
 public class PlayerMovementController : PlayerControllerBase
 {
     CharacterController cController;
+    PlayerStatusController pState;
 
     InputController inputController;
     Vector3 currentSpeed;
@@ -14,18 +15,29 @@ public class PlayerMovementController : PlayerControllerBase
 
     RaycastHit groundHit;
 
+    public float gravity = -9.81f * 2;
+
     public PlayerMovementController(PlayerManager pMng) : base(pMng)
     {
+        
+    }
+
+    float currentRotateX = 0;
+
+    public override void InitController()
+    {
+        base.InitController();
+
         moveDirection = new Vector3();
         currentSpeed = new Vector3();
 
         cController = pMng.GetComponent<CharacterController>();
         inputController = pMng.states["InputController"] as InputController;
 
+        pState = pMng.states["StatusController"] as PlayerStatusController;
+
         cameraTrans = Camera.main.transform;
     }
-
-    float currentRotateX = 0;
 
     void HandleLook()
     {
@@ -45,7 +57,7 @@ public class PlayerMovementController : PlayerControllerBase
             pMng.transform.right * inputController.inputDirection.z
         );
 
-        targetDirection *= pMng.nowGrounded ? pMng.walkingSpeed : pMng.airMoveSpeed;
+        targetDirection *= pMng.nowGrounded ? pState.baseStatus.movementSpeed : pState.baseStatus.movementSpeed / 2;
         currentSpeed.x = targetDirection.x;
         currentSpeed.z = targetDirection.z;
 
@@ -53,7 +65,7 @@ public class PlayerMovementController : PlayerControllerBase
         {
             if (inputController.inputJump)
             {
-                currentSpeed.y = pMng.jumpHeight;
+                currentSpeed.y = 1.5f + pState.baseStatus.movementSpeed/2;
                 pMng.DelayGround(.3f);
             }
         }
@@ -62,7 +74,7 @@ public class PlayerMovementController : PlayerControllerBase
 
         }
 
-        currentSpeed.y += pMng.gravity * Time.deltaTime;
+        currentSpeed.y += gravity * Time.deltaTime;
         currentSpeed.y = Mathf.Clamp(currentSpeed.y, -20, 20);
         moveDirection = currentSpeed;
 

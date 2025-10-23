@@ -52,7 +52,7 @@ public class MonsterManager : MonoBehaviour
         for(int i = 0; i < (int)GameSceneManager.GetCurrentDifficulty(); i++)
         {
             var monster = AddMonster((MonsterTypeID)1);
-            monster.Inintialize();
+            monster.Inintialize(this);
         }
     }
 

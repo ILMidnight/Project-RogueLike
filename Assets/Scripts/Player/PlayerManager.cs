@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class PlayerManager : MonoBehaviour
 {
@@ -8,21 +9,26 @@ public class PlayerManager : MonoBehaviour
 
     [SerializeField]
     public Vector3 test;
+    bool nowControll = false;
 
+    #region Exp Values
+    DataLoader loader;
+    int currentLevel = 0;
+    float currentExp = 0;
+    int[] nextLevelExpArr;
+
+    public UnityEvent levelUpEvent;
+    #endregion
 
     #region Movement Values
-    [Header("Movement Settings")]
-    public float walkingSpeed = 5.0f;
-    public float runningSpeed = 10.0f;
-    public float airMoveSpeed = 3.5f;
-    public float jumpHeight = 2.0f;
-    public float gravity = -9.81f * 2; // 더 빠르게 떨어지도록 중력값 조정
-
-    [Header("Camera Look Settings")]
-    public float lookSpeed = 2.0f;
-    public float lookXLimit = 45.0f;
     public bool nowGrounded = false;
     bool dontCheckGrounded = false;
+    #endregion
+
+    #region View Values
+    public float lookSpeed = 2.0f;
+    public float lookXLimit = 45.0f;
+
     #endregion
 
     #region Attack Values
@@ -30,26 +36,52 @@ public class PlayerManager : MonoBehaviour
     public Transform attackPoolTrans;
     #endregion
 
-    #region UI Methoad
+    #region UI Values
     public GameObject StatusCanvas;
     #endregion
 
+    #region Hit Values 
+    Coroutine invulnerabilityRoot;
+    float invulnerabilityTime = .5f;
+
+    bool nowInvulnerability = false;
+    #endregion
+
+    #region Setting Player Functions 
     private void Awake()
     {
+        loader = new DataLoader();
+        nextLevelExpArr = loader.LoadExpCSV("expData.csv");
+
         states = new Dictionary<string, IPlayerState>();
-        
+
         states.Add("UIController", new PlayerUIController(this));
         states.Add("InputController", new InputController(this));
         states.Add("MoveController", new PlayerMovementController(this));
         states.Add("AttackController", new AttackController(this));
         states.Add("StatusController", new PlayerStatusController(this));
+
+        Invoke("InvokeInitControllers", .5f);
     }
+
+    void InvokeInitControllers()
+    {
+        foreach (var temp in states)
+        {
+            temp.Value.InitController();
+        }
+
+        nowControll = true;
+    }
+    #endregion
 
     // Update is called once per frame
     void Update()
     {
-        if (!dontCheckGrounded)
-            nowGrounded = Physics.Raycast(transform.position, Vector3.down, 1.1f);
+        if (!nowControll)
+            return;
+
+        CheckedGround();
 
         foreach (var state in states)
         {
@@ -57,6 +89,12 @@ public class PlayerManager : MonoBehaviour
         }
     }
 
+    #region Grounded Functions
+    void CheckedGround()
+    {
+        if (!dontCheckGrounded)
+            nowGrounded = Physics.Raycast(transform.position, Vector3.down, 1.1f);
+    }
     public void DelayGround(float time)
     {
         nowGrounded = false;
@@ -69,12 +107,9 @@ public class PlayerManager : MonoBehaviour
         // nowGrounded = true;
         dontCheckGrounded = false;
     }
+    #endregion
 
-    Coroutine invulnerabilityRoot;
-    float invulnerabilityTime = .5f;
-
-    bool nowInvulnerability = false;
-
+    #region Hit Functions
     public void Hit(int damage)
     {
         if (nowInvulnerability)
@@ -89,7 +124,7 @@ public class PlayerManager : MonoBehaviour
         }
 
         Debug.Log("Hit");
-        
+
         (states["StatusController"] as PlayerStatusController).AddDamage(damage);
     }
 
@@ -99,4 +134,28 @@ public class PlayerManager : MonoBehaviour
         yield return new WaitForSecondsRealtime(delayTime);
         nowInvulnerability = false;
     }
+    #endregion
+
+    #region Exp Functions
+    public void AddExp(int addtiveExp)
+    {
+        currentExp += addtiveExp;
+        CheckedLevelUp();
+    }
+
+    private void CheckedLevelUp()
+    {
+        if (nextLevelExpArr[currentLevel] <= currentExp)
+        {
+            currentExp -= nextLevelExpArr[currentLevel++];
+            LevelUP();
+        }
+    }
+
+    public void LevelUP()
+    {
+        levelUpEvent.Invoke();
+        CheckedLevelUp();
+    }
+    #endregion
 }

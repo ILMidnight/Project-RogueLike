@@ -19,14 +19,14 @@ public class PlayerStatusController : PlayerControllerBase
 
     public PlayerStatusController(PlayerManager pMng) : base(pMng)
     {
-        InItPlayer();
-
-        pUIController = pMng.states["UIController"] as PlayerUIController;
-        pMovementController = pMng.states["MoveController"] as PlayerMovementController;
+        // InitController();
     }
 
-    void InItPlayer()
+    public override void InitController()
     {
+        pUIController = pMng.states["UIController"] as PlayerUIController;
+        pMovementController = pMng.states["MoveController"] as PlayerMovementController;
+
         baseStatus = new StatPoint(
             100, 0, 7, 30, 0, 0
         );
