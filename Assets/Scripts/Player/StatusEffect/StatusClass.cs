@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.Events;
 
 public enum Buff
 {
@@ -25,7 +26,14 @@ public enum Debuff
 public struct StatPoint
 {
     // HP 공식 : 기본 HP(레벨별 체력) + maxHP
+    public float MaxHP;
+    // 현재 체력
     public float Hp;
+    // 기본 데미지 수치, 각 무기별로 데미지 공식 계산
+    public float Damage;
+    // 기본 히트스캔 공격 기준 1 / AttackSpeed  공식을 이용하여 초당 몇번 공격하는 지 계산 하여 적용
+    public float AttackSpeed;
+    public int RegenerationHP;
     public float shield;
     // 기본 속도에 더하기
     public float movementSpeed;
@@ -38,13 +46,58 @@ public struct StatPoint
     // 상태이상 지속 시간 퍼센트로 감소
     public int strength;
 
+    #region ControllStatus Functions
+    public struct SelectButtonData
+{
+    public SelectButtonData(string t, string d, UnityEvent s)
+    {
+        title = t;
+        detail = d;
+        selectEvent = s;
+    }
+    public string title;
+    public string detail;
 
+    public UnityEvent selectEvent;
+}
+
+public class SkillUpFunctions
+{
+    public SkillUpFunctions(SkillSelectGroup skillGroup)
+    {
+        this.skillGroup = skillGroup;
+    }
+    SkillSelectGroup skillGroup;
+    public SelectButtonData MaxHPChange(int value)
+    {
+        var temp = new SelectButtonData();
+        temp.title = "Max HP " + (value > 0 ? "Up" : "Down");
+        temp.detail = "Max HP " + Mathf.Abs(value) + (value > 0 ? " Up" : " Down");
+        var tempEvent = new UnityEvent();
+        tempEvent.AddListener(() =>
+        {
+            Debug.Log("Test");
+            skillGroup.pStatusController.ChangeMaxHp(value);
+            skillGroup.CloseButtons();
+            Debug.Log(skillGroup.pStatusController.baseStatus.MaxHP);
+        });
+        temp.selectEvent = tempEvent;
+        return temp;
+    }
+
+    // public Sele
+}
+    #endregion
 
     public StatPoint(float Hp, float shield, float movementSpeed, float attackRange, int coolDownSpeed, int strength)
     {
-        this.Hp = Hp;
+        this.MaxHP = this.Hp = Hp;
         this.shield = shield;
 
+        this.Damage = 10;
+        this.AttackSpeed = 5;
+
+        this.RegenerationHP = 10;
         this.movementSpeed = movementSpeed;
         this.attackRange = attackRange;
         this.coolDownSpeed = coolDownSpeed;
@@ -67,7 +120,7 @@ public struct StatPoint
         if (Mathf.Abs(end.shield - lerpShield) < .1f)
             lerpShield = end.shield;
 
-        return new StatPoint
+        var temp = new StatPoint
         (
             lerpHp,
             lerpShield,
@@ -76,6 +129,9 @@ public struct StatPoint
             lerpCoolDownSpeed,
             lerpStrength
         );
+
+        temp.MaxHP = end.MaxHP;
+        return temp;
     }
 }
 

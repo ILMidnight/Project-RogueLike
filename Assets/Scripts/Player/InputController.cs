@@ -14,6 +14,9 @@ public class InputController : PlayerControllerBase
     private bool _inputClick;
     public bool inputClick => _inputClick;
 
+    private bool _stillMouseDown;
+    public bool stillMouseDown => _stillMouseDown;
+
     public InputController(PlayerManager pMng) : base(pMng)
     {
 
@@ -34,6 +37,8 @@ public class InputController : PlayerControllerBase
 
         if (Input.GetMouseButtonDown(0))
             _inputClick = true;
+
+        _stillMouseDown = Input.GetMouseButton(0);
     }
 
     public void CheckClick()

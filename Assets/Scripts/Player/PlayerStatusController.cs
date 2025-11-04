@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -16,6 +17,22 @@ public class PlayerStatusController : PlayerControllerBase
 
     TMP_Text hpText;
     TMP_Text shieldText;
+
+    bool _nowRegenerationHP;
+    bool nowRegenerationHP
+    {
+        get
+        {
+            return _nowRegenerationHP;
+        }
+        set
+        {
+            _nowRegenerationHP = value;
+            if (value)
+                pMng.RegenerationHP();
+        }
+    }
+    int delayRegenerationTime = 2;
 
     public PlayerStatusController(PlayerManager pMng) : base(pMng)
     {
@@ -57,13 +74,13 @@ public class PlayerStatusController : PlayerControllerBase
         
         displayStatus = StatPoint.Lerp(displayStatus, baseStatus, Time.deltaTime * 2.5f);
 
-        if(hpText == null)
+        if (hpText == null)
         {
             SetUIText();
         }
         else
         {
-            hpText.text = ((int)(Mathf.Max(displayStatus.Hp, 0))).ToString();
+            hpText.text = $"{(int)(Mathf.Max(displayStatus.Hp, 0))} / {(int)(Mathf.Max(displayStatus.MaxHP, 0))}";
             shieldText.text = ((int)(Mathf.Max(displayStatus.shield, 0))).ToString();
         }
     }
@@ -72,14 +89,44 @@ public class PlayerStatusController : PlayerControllerBase
     {
         effectList.Remove(effect);
     }
+
+    public IEnumerator RegenerationHP()
+    {
+        while (nowRegenerationHP)
+        {
+            ChangeHp(1);
+            yield return new WaitForSeconds(60 / baseStatus.RegenerationHP);
+        }
+    }
     
+    public IEnumerator DelayRegenerationHP()
+    {
+        nowRegenerationHP = false;
+        yield return new WaitForSeconds(delayRegenerationTime);
+        nowRegenerationHP = true;
+    }
+
+    public void ChangeHp(float value)
+    {
+        baseStatus.Hp = Mathf.Clamp(baseStatus.Hp + value, 0, baseStatus.MaxHP);
+    }
+    public void ChangeMaxHp(float value)
+    {
+        baseStatus.MaxHP = Mathf.Max(0, baseStatus.MaxHP + value);
+
+
+
+        if (baseStatus.Hp > baseStatus.MaxHP)
+            baseStatus.Hp = baseStatus.MaxHP;
+    }
+
     public void AddDamage(int damage)
     {
-        if(baseStatus.shield > 0)
+        if (baseStatus.shield > 0)
         {
-            if(baseStatus.shield < damage)
+            if (baseStatus.shield < damage)
             {
-                baseStatus.Hp -= (damage - baseStatus.shield);
+                ChangeHp(damage - baseStatus.shield);
                 baseStatus.shield = 0;
             }
             else
@@ -91,6 +138,8 @@ public class PlayerStatusController : PlayerControllerBase
         {
             baseStatus.Hp -= damage;
         }
+
+        baseStatus.Hp = Mathf.Clamp(baseStatus.Hp, 0, baseStatus.MaxHP);
     }
 
     public void AddBuff(Buff buff)

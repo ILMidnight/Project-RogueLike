@@ -6,20 +6,22 @@ public class AttackController : PlayerControllerBase
 {
     Dictionary<string, IAttack> attacks;
 
-    InputController inputController;
+    public InputController pInput;
 
     public Transform attackParent;
 
+    public PlayerStatusController pState;
+
     public AttackController(PlayerManager pMng) : base(pMng)
     {
-
     }
 
     public override void InitController()
     {
         base.InitController();
 
-        inputController = pMng.states["InputController"] as InputController;
+        pInput = pMng.states["InputController"] as InputController;
+        pState = pMng.states["StatusController"] as PlayerStatusController;
 
         attackParent = pMng.transform.GetChild(0);
 
@@ -31,13 +33,18 @@ public class AttackController : PlayerControllerBase
     {
         base.Tick();
 
-        if (inputController.inputClick)
+        if (pInput.inputClick)
         {
-            inputController.CheckClick();
-            foreach(var attack in attacks)
+            pInput.CheckClick();
+            foreach (var attack in attacks)
             {
                 attack.Value.Attack();
             }
+        }
+
+        foreach (var attack in attacks)
+        {
+            attack.Value.Tick();
         }
 
         if (Input.GetKeyDown(KeyCode.P))

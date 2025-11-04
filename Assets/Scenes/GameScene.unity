@@ -243,6 +243,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SkillSelectGroup
   skillSelectButtonPrefab: {fileID: 3970251347712818619, guid: 7fdf91bcba98f45df9dcca253565c556, type: 3}
+  pMng: {fileID: 1506717704}
 --- !u!1 &141420980
 GameObject:
   m_ObjectHideFlags: 0
@@ -1576,6 +1577,7 @@ MonoBehaviour:
     m_Bits: 384
   attackPoolTrans: {fileID: 1431505892}
   StatusCanvas: {fileID: 1349855934}
+  skillSelectGroup: {fileID: 57227868}
 --- !u!136 &1506717705
 CapsuleCollider:
   m_ObjectHideFlags: 0

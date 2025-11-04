@@ -2,20 +2,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
-
-public struct SelectButtonData
-{
-    public SelectButtonData(string t, string d, UnityEvent s)
-    {
-        title = t;
-        detail = d;
-        selectEvent = s;
-    }
-    public string title;
-    public string detail;
-
-    public UnityEvent selectEvent;
-}
+using static StatPoint;
 
 public class SkillSelectButton : MonoBehaviour
 {
@@ -45,5 +32,7 @@ public class SkillSelectButton : MonoBehaviour
         trigger.triggers.Clear();
 
         trigger.triggers.Add(entry);
+
+        gameObject.SetActive(true);
     }
 }

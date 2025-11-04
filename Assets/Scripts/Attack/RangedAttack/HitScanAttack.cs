@@ -12,6 +12,9 @@ public class HitScanAttack : AttackBase
     int totalBullet;
     int currentBullet;
 
+    float currentTime;
+    
+
     public HitScanAttack(AttackController aController) : base(aController)
     {
         bulletObject = GameObject.Instantiate(
@@ -26,21 +29,40 @@ public class HitScanAttack : AttackBase
     {
         base.Attack();
 
-        if(Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hit, Mathf.Infinity, ~skipMask))
+        // if(currentTime)
+
+
+        // currentTime = Time.deltaTime;
+    }
+
+    public override void Tick()
+    {
+        base.Tick();
+
+        currentTime += Time.deltaTime;
+
+        if (!aController.pInput.stillMouseDown)
+            return;
+
+        if (currentTime < 1 / aController.pState.baseStatus.AttackSpeed)
+            return;
+
+        if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hit, Mathf.Infinity, ~skipMask))
         {
             bulletObject.position = hit.point;
             var temp = hit.transform.GetComponent<BaseMonster>();
-            
+
             if (temp != null)
             {
                 // Debug.Log(temp);
-                temp.Hit(10);
+                temp.Hit((int)aController.pState.baseStatus.Damage);
             }
         }
         else
         {
             bulletObject.position = aController.attackParent.position - (Vector3.down * 20);
         }
-        
+
+        currentTime = 0;
     }
 }
