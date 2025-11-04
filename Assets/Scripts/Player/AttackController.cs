@@ -27,6 +27,7 @@ public class AttackController : PlayerControllerBase
 
         attacks = new Dictionary<string, IAttack>();
         attacks.Add("HitScan", new HitScanAttack(this));
+        attacks.Add("RangeDom", new DomRangeAttack(this));
     }
 
     public override void Tick()

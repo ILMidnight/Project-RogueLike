@@ -18,11 +18,13 @@ public class HitScanAttack : AttackBase
     public HitScanAttack(AttackController aController) : base(aController)
     {
         bulletObject = GameObject.Instantiate(
-            Resources.Load<GameObject>(Path.Combine("Prefabs", "Bullet")),
-            aController.pMng.transform.position - (Vector3.down * 20),
+            Resources.Load<GameObject>(Path.Combine("Prefabs", "Attack", "Bullet")),
+            aController.pMng.transform.position,
             Quaternion.identity,
             pool
         ).transform;
+
+        bulletObject.gameObject.SetActive(false);
     }
 
     public override void Attack()
@@ -49,6 +51,7 @@ public class HitScanAttack : AttackBase
 
         if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hit, Mathf.Infinity, ~skipMask))
         {
+            bulletObject.gameObject.SetActive(true);
             bulletObject.position = hit.point;
             var temp = hit.transform.GetComponent<BaseMonster>();
 
