@@ -11,7 +11,7 @@ public class AttackBase : IAttack
     {
         this.aController = aController;
         skipMask = aController.pMng.skipMask;
-        pool = aController.pMng.attackPoolTrans;
+        pool = aController.pMng.attackPool.transform;
     }
 
     public virtual void Attack()

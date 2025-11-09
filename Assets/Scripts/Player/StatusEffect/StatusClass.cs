@@ -95,7 +95,7 @@ public class SkillUpFunctions
         this.shield = shield;
 
         this.Damage = 10;
-        this.AttackSpeed = 5;
+        this.AttackSpeed = 1;
 
         this.RegenerationHP = 10;
         this.movementSpeed = movementSpeed;

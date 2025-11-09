@@ -12,29 +12,24 @@ public class HitScanAttack : AttackBase
     int totalBullet;
     int currentBullet;
 
-    float currentTime;
+    protected float currentTime;
     
 
     public HitScanAttack(AttackController aController) : base(aController)
     {
-        bulletObject = GameObject.Instantiate(
-            Resources.Load<GameObject>(Path.Combine("Prefabs", "Attack", "Bullet")),
-            aController.pMng.transform.position,
-            Quaternion.identity,
-            pool
-        ).transform;
-
-        bulletObject.gameObject.SetActive(false);
+        InItSetting(aController);
     }
 
-    public override void Attack()
+    protected virtual void InItSetting(AttackController aController)
     {
-        base.Attack();
+        bulletObject = GameObject.Instantiate(
+                            Resources.Load<GameObject>(Path.Combine("Prefabs", "Attack", "Bullet")),
+                            aController.pMng.transform.position,
+                            Quaternion.identity,
+                            pool
+                        ).transform;
 
-        // if(currentTime)
-
-
-        // currentTime = Time.deltaTime;
+        bulletObject.gameObject.SetActive(false);
     }
 
     public override void Tick()
@@ -46,9 +41,19 @@ public class HitScanAttack : AttackBase
         if (!aController.pInput.stillMouseDown)
             return;
 
-        if (currentTime < 1 / aController.pState.baseStatus.AttackSpeed)
+        if (currentTime < CoolTime())
             return;
 
+        Shoot();
+    }
+
+    protected virtual float CoolTime()
+    {
+        return 1 / aController.pState.baseStatus.AttackSpeed;
+    }
+
+    protected virtual void Shoot()
+    {
         if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hit, Mathf.Infinity, ~skipMask))
         {
             bulletObject.gameObject.SetActive(true);

@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class BaseMonster : MonoBehaviour, IMonster, IEntity
@@ -7,6 +8,8 @@ public class BaseMonster : MonoBehaviour, IMonster, IEntity
     protected int currentHp = 100;
 
     protected int deathExp = 100;
+
+    public Rigidbody rb;
 
     public virtual void Inintialize(MonsterManager mMng)
     {
@@ -18,7 +21,10 @@ public class BaseMonster : MonoBehaviour, IMonster, IEntity
     protected virtual void SetUp()
     {
         currentHp = 100 + (int)GameSceneManager.GetCurrentDifficulty();
-        Debug.Log($"Create {name}");
+        rb = gameObject.AddComponent<Rigidbody>();
+        rb.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
+
+        // Debug.Log($"Create {name}");
     }
 
     // Update is called once per frame

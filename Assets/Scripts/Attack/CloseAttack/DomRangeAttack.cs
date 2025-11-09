@@ -43,10 +43,10 @@ public class DomRangeAttack : AttackBase
     void AutoAttack()
     {
         rangeDom.gameObject.SetActive(true);
-        var temp = Physics.SphereCastAll(aController.pMng.transform.position, aController.pState.baseStatus.attackRange, Vector3.forward);
-        foreach(var t in temp)
+        var tempList = Physics.OverlapSphere(aController.pMng.transform.position, aController.pState.baseStatus.attackRange);
+        foreach(var t in tempList)
         {
-            var monster = t.transform.GetComponent<BaseMonster>();
+            var monster = t.GetComponent<BaseMonster>();
             if (monster == null) continue;
             monster.Hit((int)aController.pState.baseStatus.Damage / 2);
         }

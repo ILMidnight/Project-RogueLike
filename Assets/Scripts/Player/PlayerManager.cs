@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using NUnit.Framework.Constraints;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -34,7 +35,10 @@ public class PlayerManager : MonoBehaviour
 
     #region Attack Values
     public LayerMask skipMask;
-    public Transform attackPoolTrans;
+    [SerializeField]
+    Transform attackPoolTrans;
+
+    public AttackObejctPool attackPool;
     #endregion
 
     #region UI Values
@@ -72,7 +76,8 @@ public class PlayerManager : MonoBehaviour
         states.Add("InputController", new InputController(this));
         states.Add("MoveController", new PlayerMovementController(this));
         states.Add("AttackController", new AttackController(this));
-        
+
+        attackPool = attackPoolTrans.AddComponent<AttackObejctPool>();
 
         StartCoroutine(InvokeInitControllers(.15f));
     }
@@ -119,7 +124,6 @@ public class PlayerManager : MonoBehaviour
         nowControll = true;
     }
     #endregion
-
     // Update is called once per frame
     void Update()
     {
