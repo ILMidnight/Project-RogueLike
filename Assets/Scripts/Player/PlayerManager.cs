@@ -62,8 +62,6 @@ public class PlayerManager : MonoBehaviour
     #region Setting Player Functions 
     private void Awake()
     {
-        // SetCursor(false);
-
         SetPause(false);
 
         loader = new DataLoader();
@@ -78,6 +76,11 @@ public class PlayerManager : MonoBehaviour
         states.Add("AttackController", new AttackController(this));
 
         attackPool = attackPoolTrans.AddComponent<AttackObejctPool>();
+
+        GameManager.instance?.gameOverEvent.AddListener(() =>
+        {
+            SetCursor(true);
+        });
 
         StartCoroutine(InvokeInitControllers(.15f));
     }
@@ -211,13 +214,21 @@ public class PlayerManager : MonoBehaviour
         if (nextLevelExpArr[currentLevel] <= currentExp)
         {
             currentExp -= nextLevelExpArr[currentLevel++];
-            LevelUP();
+            // LevelUP();
+            StartCoroutine(LevelUPs());
         }
     }
 
     public void LevelUP()
     {
         levelUpEvent.Invoke();
+        CheckedLevelUp();
+    }
+
+    IEnumerator LevelUPs()
+    {
+        levelUpEvent.Invoke();
+        yield return new WaitUntil(() => Time.timeScale == 1);
         CheckedLevelUp();
     }
     #endregion

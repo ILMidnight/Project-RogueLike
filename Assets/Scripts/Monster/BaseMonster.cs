@@ -1,3 +1,4 @@
+using System.Collections;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -36,16 +37,29 @@ public class BaseMonster : MonoBehaviour, IMonster, IEntity
     public virtual void Hit(int damage)
     {
         currentHp = Mathf.Max(currentHp - damage, 0);
-        if(currentHp <= 0)
+        if (currentHp <= 0)
         {
             Death();
         }
     }
 
+    bool currentDeath = false;
+
     public virtual void Death()
     {
+        if (currentDeath)
+            return;
+        currentDeath = true;
         Debug.Log($"Death {name}");
         mMng.pMng.AddExp(deathExp);
+
+        // StartCoroutine(DelayDeath());
+    }
+
+    IEnumerator DelayDeath()
+    {
+        yield return new WaitForEndOfFrame();
+        (mMng.pMng.states["AttackController"] as AttackController).DeathMonster(transform);
         Destroy(gameObject);
     }
 }

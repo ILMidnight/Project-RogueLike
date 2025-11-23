@@ -33,7 +33,7 @@ public class Walker : BaseMonster
         transform.position = Vector3.Lerp(
             transform.position,
             targetPos,
-            Time.deltaTime * speed
+            Time.deltaTime * speed * .1f
         );
         transform.GetChild(0).LookAt(Camera.main.transform.position);
     }

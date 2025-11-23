@@ -34,6 +34,15 @@ public class BasicBomb : MonoBehaviour
         });
     }
 
+    public virtual void SetBomb(int Damage, float Range, Vector3 basePos)
+    {
+        bombDamage = Damage;
+        bombRange = Range;
+        transform.position = basePos;
+
+        gameObject.SetActive(true);
+    }
+
     private void OnEnable() {
         colliders[0].enabled = true;
         StartCoroutine(DelayBomb());
@@ -47,7 +56,6 @@ public class BasicBomb : MonoBehaviour
 
     private void ExplodeBomb()
     {
-        Debug.Log("Bomb");
         StopAllCoroutines();
         colliders[0].enabled = false;
 

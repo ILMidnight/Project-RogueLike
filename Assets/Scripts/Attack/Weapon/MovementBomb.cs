@@ -11,10 +11,19 @@ public class MovementBomb : BasicBomb
         rb = transform.AddComponent<Rigidbody>();
     }
 
-    public void ShootBomb(Transform trans, float power)
+    public void SetBomb(int Damage, float Range, Vector3 basePos, Vector3 targetDir)
     {
-        transform.position = trans.position + trans.forward;
-        rb.linearVelocity = Vector3.zero;
-        rb.AddForce(trans.forward * power, ForceMode.Impulse);
+        base.SetBomb(Damage, Range, basePos);
+
+        rb.linearVelocity = Vector2.zero;
+
+        rb.AddForce(targetDir * Range, ForceMode.Impulse);
     }
+
+    // public void ShootBomb(Transform trans, float power)
+    // {
+    //     transform.position = trans.position + trans.forward;
+    //     rb.linearVelocity = Vector3.zero;
+    //     rb.AddForce(trans.forward * power, ForceMode.Impulse);
+    // }
 }

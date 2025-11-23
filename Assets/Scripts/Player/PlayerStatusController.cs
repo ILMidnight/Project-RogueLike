@@ -47,6 +47,9 @@ public class PlayerStatusController : PlayerControllerBase
         baseStatus = new StatPoint(
             100, 0, 7, 30, 0, 0
         );
+
+        baseStatus.Damage = 100;
+
         displayStatus = new StatPoint(0, 0, 0, 0, 0, 0);
 
         effectList = new List<BaseStatusEffect>();
@@ -109,6 +112,11 @@ public class PlayerStatusController : PlayerControllerBase
     public void ChangeHp(float value)
     {
         baseStatus.Hp = Mathf.Clamp(baseStatus.Hp + value, 0, baseStatus.MaxHP);
+
+        if(baseStatus.Hp <= 0)
+        {
+            GameManager.instance.GameOver();
+        }
     }
     public void ChangeMaxHp(float value)
     {
@@ -139,7 +147,7 @@ public class PlayerStatusController : PlayerControllerBase
             baseStatus.Hp -= damage;
         }
 
-        baseStatus.Hp = Mathf.Clamp(baseStatus.Hp, 0, baseStatus.MaxHP);
+        ChangeHp(0);
     }
 
     public void AddBuff(Buff buff)

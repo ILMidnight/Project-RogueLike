@@ -28,7 +28,14 @@ public class BombLauncher : HitScanAttack
         currentTime = 0;
 
         var temp = aController.pMng.attackPool.moveBombPool.Get();
-        temp.gameObject.SetActive(true);
-        temp.ShootBomb(Camera.main.transform, aController.pState.baseStatus.attackRange / 7);
+        // temp.gameObject.SetActive(true);
+        // temp.ShootBomb(Camera.main.transform, aController.pState.baseStatus.attackRange / 7);
+
+        temp.SetBomb(
+            (int)aController.pState.baseStatus.Damage / 3,
+            aController.pState.baseStatus.attackRange,
+            Camera.main.transform.position + Camera.main.transform.forward,
+            Camera.main.transform.forward
+        );
     }
 }
