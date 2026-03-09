@@ -53,7 +53,7 @@ public class BaseMonster : MonoBehaviour, IMonster, IEntity
         Debug.Log($"Death {name}");
         mMng.pMng.AddExp(deathExp);
 
-        // StartCoroutine(DelayDeath());
+        StartCoroutine(DelayDeath());
     }
 
     IEnumerator DelayDeath()

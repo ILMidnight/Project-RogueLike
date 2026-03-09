@@ -37,7 +37,7 @@ public class PlayerManager : MonoBehaviour
     public LayerMask skipMask;
     [SerializeField]
     Transform attackPoolTrans;
-
+    [HideInInspector]
     public AttackObejctPool attackPool;
     #endregion
 
